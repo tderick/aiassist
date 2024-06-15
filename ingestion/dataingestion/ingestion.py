@@ -23,7 +23,6 @@ splitter = SemanticSplitterNodeParser(
 # Qdrant Vector Store
 client = qdrant_client.QdrantClient("localhost", port=6333)
 
-
 class WebPageIngestion:
     def __init__(self, url: str, bot_id: str):
       self.url = url
@@ -35,30 +34,4 @@ class WebPageIngestion:
     def ingest(self):
         documents = SimpleWebPageReader(html_to_text=True).load_data([self.url])
         for doc in documents:
-            print(self.index.insert(doc))
-
-
-# documents = SimpleWebPageReader(html_to_text=True).load_data(
-#     ["https://www.unipi.it/index.php/master"]
-# )
-
-# import pdb; pdb.set_trace()
-# for doc in documents:
-# index.insert(documents[0])
-
-# set Logging to DEBUG for more detailed outputs
-# query_engine = index.as_query_engine(llm=None, logging_level="INFO")
-# response = query_engine.query("what master's are available?")
-
-# print(response)
-
-# RETRIEVAL
-# query_engine = index.as_query_engine(
-#                   llm=llm,
-#                   similarity_top_k=10,
-#                 )
-
-# query = "List all the available master's programs at the University of Pisa"
-# resp = query_engine.query(query)
-
-# print(resp.response)
+            self.index.insert(doc)

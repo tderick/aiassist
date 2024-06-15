@@ -1,5 +1,4 @@
-from fastapi import FastAPI, File, UploadFile, Form, HTTPException
-from enum import Enum
+from fastapi import FastAPI,Form
 import uvicorn
 
 from dataretrieval.retriever import DataRetrieval
