@@ -1,0 +1,6 @@
+fastapi==0.111.0
+python-decouple==3.8
+llama-index-core==0.10.44
+llama-index-vector-stores-qdrant==0.2.8
+llama-index-llms-openai==0.1.22
+llama-index-embeddings-openai==0.1.10
