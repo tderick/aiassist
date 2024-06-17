@@ -1,23 +1,29 @@
 import openai
-from decouple import config
-
 import qdrant_client
 
+from decouple import config
+
+from llama_index.core import (Settings,PromptTemplate)
 from llama_index.core.indices.vector_store.base import VectorStoreIndex
+from llama_index.core.node_parser import SemanticSplitterNodeParser
+
+from llama_index.llms.openai import OpenAI
+
 from llama_index.vector_stores.qdrant import QdrantVectorStore
 from llama_index.readers.web import SimpleWebPageReader
 
-from llama_index.core.node_parser import SemanticSplitterNodeParser
 from llama_index.embeddings.openai import OpenAIEmbedding
 
 openai.api_key = config("OPENAI_API_KEY")
 
+Settings.llm = OpenAI(model="gpt-3.5-turbo", temperature=0.1, )
+Settings.embed_model = OpenAIEmbedding(model="text-embedding-3-small")
+
 # Node Parser
-embed_model = OpenAIEmbedding()
 splitter = SemanticSplitterNodeParser(
     buffer_size=1, 
     breakpoint_percentile_threshold=95, 
-    embed_model=embed_model
+    embed_model=Settings.embed_model
 )
 
 # Qdrant Vector Store
