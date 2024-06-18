@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, shrink-to-fit=no"
+    />
+    <title>AI-Assist</title>
+
+    <!-- Favicon -->
+    <link
+      rel="shortcut icon"
+      href="{{url_for('static', filename='assets/images/favicon.ico')}}"
+    />
+    <link
+      rel="stylesheet"
+      href="{{url_for('static', filename='assets/css/backend-plugin.min.css')}}"
+    />
+    <link
+      rel="stylesheet"
+      href="{{url_for('static', filename='assets/css/backend.css')}}"
+    />
+    <link
+      rel="stylesheet"
+      href="{{url_for('static', filename='assets/vendor/line-awesome/dist/line-awesome/css/line-awesome.min.css')}}"
+    />
+    <link
+      rel="stylesheet"
+      href="{{url_for('static', filename='assets/vendor/remixicon/fonts/remixicon.css')}}"
+    />
+
+    <link
+      rel="stylesheet"
+      href="{{url_for('static', filename='assets/vendor/tui-calendar/tui-calendar/dist/tui-calendar.css')}}"
+    />
+    <link
+      rel="stylesheet"
+      href="{{url_for('static', filename='assets/vendor/tui-calendar/tui-date-picker/dist/tui-date-picker.css')}}"
+    />
+    <link
+      rel="stylesheet"
+      href="{{url_for('static', filename='assets/vendor/tui-calendar/tui-time-picker/dist/tui-time-picker.css')}}"
+    />
+  </head>
+
+  <body class="  ">
+    <!-- loader Start -->
+    <div id="loading">
+      <div id="loading-center"></div>
+    </div>
+    <!-- loader END -->
+
+    <!-- Wrapper Start -->
+    <div
+      class="wrapper"
+      style="background: url({{url_for('static', filename='assets/images/airport.jpg')}}); background-attachment: fixed; background-size: cover; "
+    >
+      {% block squeleton_wrapper %} {% endblock squeleton_wrapper %}
+    </div>
+    <!-- Wrapper End-->
+
+    <!-- Modal list start -->
+
+    <!-- Backend Bundle JavaScript -->
+    <script src="{{url_for('static', filename='assets/js/backend-bundle.min.js')}}"></script>
+
+    <!-- Table Treeview JavaScript -->
+    <script src="{{url_for('static', filename='assets/js/table-treeview.js')}}"></script>
+
+    <!-- Chart Custom JavaScript -->
+    <script src="{{url_for('static', filename='assets/js/customizer.js')}}"></script>
+
+    <!-- Chart Custom JavaScript -->
+    <script
+      async
+      src="{{url_for('static', filename='assets/js/chart-custom.js')}}"
+    ></script>
+    <script src="{{url_for('static', filename='assets/js/charts/01.js')}}"></script>
+    <script src="{{url_for('static', filename='assets/js/charts/02.js')}}"></script>
+    <!-- Chart Custom JavaScript -->
+    <script
+      async
+      src="{{url_for('static', filename='assets/js/slider.js')}}"
+    ></script>
+
+    <!-- app JavaScript -->
+    <script src="{{url_for('static', filename='assets/js/app.js')}}"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+
+    <script>
+      $(document).ready(function () {
+        $(".delete-message").on("submit", function (e) {
+          e.preventDefault();
+
+          let button = $(this);
+          var form = $(this);
+          var route = form.data("route");
+          var returnurl = form.data("returnurl");
+          var csrf_token = form.find("input[name=csrf_token]").val();
+          var data = { csrf_token: csrf_token };
+
+          swal
+            .fire({
+              icon: "warning",
+              title: "Are you sure?",
+              text: "You won't be able to revert this.",
+              showCancelButton: true,
+              confirmButtonText: "Yes, delete it!",
+            })
+            .then((result) => {
+              if (result.isConfirmed) {
+                $.ajax({
+                  type: "POST",
+                  headers: {
+                    "X-CSRF-TOKEN": csrf_token,
+                  },
+                  url: button.data("route"),
+                  data: {
+                    _method: "delete",
+                  },
+                  success: function (response, textStatus, xhr) {
+                    Swal.fire({
+                      icon: "success",
+                      text: "Successfully deleted",
+                      showDenyButton: false,
+                      showCancelButton: false,
+                      confirmButtonText: "Go on",
+                    }).then((result) => {
+                      window.location = returnurl;
+                    });
+                  },
+                });
+              }
+            });
+        });
+      });
+    </script>
+  </body>
+</html>

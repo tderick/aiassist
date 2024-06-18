@@ -1,0 +1,43 @@
+<div class="iq-sidebar  sidebar-default ">
+    <div class="iq-sidebar-logo d-flex align-items-center">
+        <a href="/" class="header-logo">
+           <!-- <img src="assets/images/logo.png' %}" alt="logo"> -->
+            <h2 class="light-logo">AI-Assist</h2>
+        </a>
+        <div class="iq-menu-bt-sidebar ml-0">
+            <i class="las la-bars wrapper-menu"></i>
+        </div>
+    </div>
+
+    <div class="data-scrollbar" data-scroll="1">
+        <nav class="iq-sidebar-menu">
+            <ul id="iq-sidebar-toggle" class="iq-menu">
+                <li {% if request.path == url_for('panel.dashboard') %}class="active"{% endif %}>
+                    <a href="{{url_for('panel.dashboard')}}" class="svg-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"
+                            width="20" height="20">
+                            <path
+                                d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z" />
+                        </svg>
+                        <span class="ml-3">Dashboard</span>
+                    </a>
+                </li>
+   
+
+                <li {% if request.path == url_for('panel.user_list') %}class="active"{% endif %}>
+                    <a href="{{url_for('panel.user_list')}}" >
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"
+                            width="20" height="20">
+                            <path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z"
+                                clip-rule="evenodd" />
+                        </svg>
+                        <span class="ml-3">Users</span>
+
+                    </a>
+                </li>
+            </ul>
+        </nav>
+
+        <div class="pt-5 pb-2"></div>
+    </div>
+</div>

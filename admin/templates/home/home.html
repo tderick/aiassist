@@ -1,0 +1,32 @@
+{% extends 'base.html' %} {% block squeleton_wrapper %}
+
+<!--BEGIN: Start Footer -->
+{% include "home/header.html" %}
+<!--BEGIN: Start Footer -->
+
+<div class="container">
+  <div class="row no-gutters height-self-center">
+    <div class="col-sm-12 text-center align-self-center">
+      <div class="iq-error position-relative">
+        <h2 class="mb-0 mt-4">Find Airport by IATA, ICAO or Name</h2>
+        <form
+          class="mr-3 position-relative"
+          method="GET"
+          action="{{ url_for('home.airport_result') }}"
+        >
+          <div class="form-group mb-0 mt-4">
+            <input
+              type="search"
+              class="form-control"
+              name="q"
+              placeholder="Enter the Airport IATA, ICAO Code or Name"
+              aria-controls="user-list-table"
+              autofocus
+            />
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock squeleton_wrapper %}
