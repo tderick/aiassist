@@ -1,3 +1,5 @@
+from bson import ObjectId
+
 from flask import Blueprint, redirect, render_template, url_for, request
 from flask_login import current_user, login_required
 
@@ -49,9 +51,11 @@ def create_or_edit_bot():
     return redirect(url_for("panel.dashboard"))
 
 
-@bp.route("/bots/")
-def bot_documents():
-    return get_database().bots.find({"owner": current_user.object_id})
+@bp.route("/bots/details/")
+def bot_details():
+    bot = get_database().bots.find_one({"owner": current_user.object_id, "_id": ObjectId(request.args.get("id"))})
+    # import pdb; pdb.set_trace()
+    return render_template("dashboard/bots/bot-details.html", bot=bot)
 
 @bp.route("/bots/delete/", methods=["POST"])
 def delete_bot():
