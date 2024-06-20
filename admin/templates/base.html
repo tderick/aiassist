@@ -65,20 +65,11 @@
     <!-- Backend Bundle JavaScript -->
     <script src="{{url_for('static', filename='assets/js/backend-bundle.min.js')}}"></script>
 
-    <!-- Table Treeview JavaScript -->
-    <script src="{{url_for('static', filename='assets/js/table-treeview.js')}}"></script>
-
+  
     <!-- Chart Custom JavaScript -->
     <script src="{{url_for('static', filename='assets/js/customizer.js')}}"></script>
 
-    <!-- Chart Custom JavaScript -->
-    <script
-      async
-      src="{{url_for('static', filename='assets/js/chart-custom.js')}}"
-    ></script>
-    <script src="{{url_for('static', filename='assets/js/charts/01.js')}}"></script>
-    <script src="{{url_for('static', filename='assets/js/charts/02.js')}}"></script>
-    <!-- Chart Custom JavaScript -->
+
     <script
       async
       src="{{url_for('static', filename='assets/js/slider.js')}}"
@@ -139,5 +130,8 @@
         });
       });
     </script>
+
+    <!-- CUSTOM JS -->
+    {% block page_scripts %} {% endblock page_scripts %}
   </body>
 </html>

@@ -17,6 +17,29 @@
     <button type="button" class="btn btn-outline-secondary mt-2">
       <i class="ri-bill-fill"></i>Add Source</button>
   </div>
-</div>
+
+  <div id="bot_details_add_source">
+    [[ message ]]
   
+  </div>
+
+</div>
+
 {% endblock page_content_wrapper %}
+
+{% block page_scripts %} 
+
+<script type="module">
+  import { createApp } from 'https://unpkg.com/vue@3/dist/vue.esm-browser.js'
+
+  createApp({
+    delimiters: ['[[', ']]'],
+    data() {
+      return {
+        message: 'Hello Vue!'
+      }
+    }
+  }).mount('#bot_details_add_source')
+</script>
+
+{% endblock page_scripts %}
