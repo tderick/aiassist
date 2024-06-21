@@ -1,25 +1,53 @@
+import json
 import requests
 
 import chainlit as cl
 
 from decouple import config
 
-
 @cl.on_chat_start
 async def start():
-    bot_id = await cl.CopilotFunction(name="url_query_parameter", args={"msg": "bot_id"}).acall()
-    rs = requests.get(config("ADMIN_URL")+'/manage/bots/')
-    bots = rs.json()
+    try:
+        bot_id = await cl.CopilotFunction(name="url_query_parameter", args={"msg": "bot_id"}).acall()
+        rs = requests.get(config("ADMIN_URL")+'/manage/bots/')
+        rs.raise_for_status()  # Raises an exception if the request failed
+        bots = rs.json()
+    except requests.RequestException as e:
+        print(f"Request failed: {e}")
+        return
+    except json.JSONDecodeError as e:
+        print(f"Failed to decode JSON: {e}")
+        return
 
     if bot_id:
         cl.user_session.set("bot_id", bot_id)
-        bot = next((bot for bot in bots if bot['id'] == bot_id), None)
-        await cl.Message(content=bot['description']).send()
+        bot = next((bot for bot in bots if bot.get('id') == bot_id), None)
     else:
         chat_profile = cl.user_session.get("chat_profile")
-        bot = next((bot for bot in bots if bot['name'] == chat_profile), None)
-        cl.user_session.set("bot_id", bot['id'])
-        await cl.Message(content=bot['description']).send()
+        bot = next((bot for bot in bots if bot.get('name') == chat_profile), None)
+
+    if bot is None:
+        print("Bot not found")
+        return
+
+    cl.user_session.set("bot_id", bot.get('id'))
+    await cl.Message(content=bot.get('description')).send()
+
+# @cl.on_chat_start
+# async def start():
+#     bot_id = await cl.CopilotFunction(name="url_query_parameter", args={"msg": "bot_id"}).acall()
+#     rs = requests.get(config("ADMIN_URL")+'/manage/bots/')
+#     bots = rs.json()
+
+#     if bot_id:
+#         cl.user_session.set("bot_id", bot_id)
+#         bot = next((bot for bot in bots if bot['id'] == bot_id), None)
+#         await cl.Message(content=bot['description']).send()
+#     else:
+#         chat_profile = cl.user_session.get("chat_profile")
+#         bot = next((bot for bot in bots if bot['name'] == chat_profile), None)
+#         cl.user_session.set("bot_id", bot['id'])
+#         await cl.Message(content=bot['description']).send()
 
 @cl.set_chat_profiles
 async def chat_profile():
