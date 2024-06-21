@@ -5,12 +5,38 @@ import chainlit as cl
 from decouple import config
 
 
-
 @cl.on_chat_start
 async def start():
     bot_id = await cl.CopilotFunction(name="url_query_parameter", args={"msg": "bot_id"}).acall()
+    rs = requests.get(config("ADMIN_URL")+'/manage/bots/')
+    bots = rs.json()
+
     if bot_id:
         cl.user_session.set("bot_id", bot_id)
+        bot = next((bot for bot in bots if bot['id'] == bot_id), None)
+        await cl.Message(content=bot['description']).send()
+    else:
+        chat_profile = cl.user_session.get("chat_profile")
+        bot = next((bot for bot in bots if bot['name'] == chat_profile), None)
+        cl.user_session.set("bot_id", bot['id'])
+        await cl.Message(content=bot['description']).send()
+
+@cl.set_chat_profiles
+async def chat_profile():
+    rs = requests.get(config("ADMIN_URL")+'/manage/bots/')
+    bots = rs.json()
+
+    profiles = []
+    for bot in bots:
+        profiles.append(
+            cl.ChatProfile(
+                name=bot['name'],
+                markdown_description=bot['description'],
+            )
+        )
+    profiles[0].default = True
+
+    return profiles
 
 @cl.on_message
 async def main(message: cl.Message):

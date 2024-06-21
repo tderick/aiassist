@@ -6,6 +6,7 @@
       <div class="card-body">
           <h4 class="mb-2">{{bot.name}}</h4>
           <p class="text-muted text-small">ID: {{bot._id}}</p>
+          <p class="text-muted text-small">Bot URL: <a href="{{chat_url}}?bot_id={{bot._id}}" target="_blank">{{chat_url}}?bot_id={{bot._id}}</a></p>
           <p class="mb-0">{{bot.description}}</p>
           <input type="hidden" ref="botId"  value="{{ bot._id }}"/>
           <input ref="csrfToken" value="{{ csrf_token() }}" type="hidden">

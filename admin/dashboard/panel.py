@@ -1,9 +1,12 @@
 import requests
 
 from bson import ObjectId
+from bson.json_util import dumps
+from bson.json_util import loads
+
 from decouple import config
 
-from flask import Blueprint, redirect, render_template, url_for, request
+from flask import Blueprint, redirect, render_template, url_for, request, jsonify
 from flask_login import current_user, login_required
 
 from dashboard.database import get_database
@@ -57,8 +60,9 @@ def create_or_edit_bot():
 @bp.route("/bots/details/")
 def bot_details():
     bot = get_database().bots.find_one({"owner": current_user.object_id, "_id": ObjectId(request.args.get("id"))})
+    chat_url = config("CHAT_URL")
     # import pdb; pdb.set_trace()
-    return render_template("dashboard/bots/bot-details.html", bot=bot)
+    return render_template("dashboard/bots/bot-details.html", bot=bot, chat_url=chat_url)
 
 @bp.route("/bots/delete/", methods=["POST"])
 def delete_bot():
@@ -95,3 +99,15 @@ def index_webpage():
     else:
         return {"error": "Bot not found."}, 404
   
+
+@bp.route("/bots/")
+def get_bots():
+    cursor = get_database().bots.aggregate([{
+        "$project": {
+            "_id": 0,
+            "id": { "$toString": "$_id" },
+            "name": 1,
+            "description": 1
+        }} ])
+    return jsonify(loads(dumps(cursor))), 200
+
