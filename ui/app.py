@@ -2,21 +2,27 @@ import requests
 
 import chainlit as cl
 
+from decouple import config
+
+
 
 @cl.on_chat_start
 async def start():
-    pass
+    bot_id = await cl.CopilotFunction(name="url_query_parameter", args={"msg": "bot_id"}).acall()
+    if bot_id:
+        cl.user_session.set("bot_id", bot_id)
 
 @cl.on_message
 async def main(message: cl.Message):
-    url = 'http://127.0.0.1:8001/api/v1/retriever/'
+    bot_id = cl.user_session.get("bot_id")
+    url = config("RETRIEVAL_URL")+'/api/v1/retriever/'
     headers = {
         'accept': 'application/json',
         'Content-Type': 'application/x-www-form-urlencoded',
     }
     data = {
         'question': message.content,
-        'bot_id': 'unipi',
+        'bot_id': bot_id,
     }
 
     try:
