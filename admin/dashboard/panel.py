@@ -62,3 +62,20 @@ def delete_bot():
     bot_id = request.form.get("bot_id")
     # get_database().bots.delete_one({"_id": ObjectId(bot_id)})
     return redirect(url_for("panel.dashboard"))
+
+@bp.route("/bots/add-source/", methods=["POST"])
+def index_webpage():
+    bot_id = request.json.get("botId")
+    sourceUrl = request.json.get("sourceUrl")
+    sourceTitle = request.json.get("sourceTitle")
+    bot = get_database().bots.find_one({"_id": ObjectId(bot_id)})
+
+    if bot:
+        get_database().bots.update_one(
+            {"_id": ObjectId(bot_id)},
+            {"$push": {"sources": {"title": sourceTitle, "url": sourceUrl}}},
+        )
+        return {"success": "Source added successfully."}, 200
+    else:
+        return {"error": "Bot not found."}, 404
+  
