@@ -1,0 +1,18 @@
+Source 1:
+Extended Page Tables
+•Both AMD and Intel have added some 
+extensions to their hardware support to 
+simplify the task of virtualizing guest virtual 
+memory
+•Specifically, they introduced the extended 
+page table, that is available on the host but 
+not on the hardware emulated for the VM
+•The hardware implementing the host MMU is 
+extended to have two PTBR pointers, one to 
+the page table of the guest VM, 
+implementing the G mapping, another one to 
+the page table created by the VMM to 
+implement the H mapping
+•The extended hardware takes care of 
+applying the composition of G mapping and 
+H mapping, which are applied sequentially

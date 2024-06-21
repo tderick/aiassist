@@ -1,0 +1,18 @@
+Source 2:
+Extended Page Tables
+•Through this extension, there is no longer any need for VM exits, 
+every time the guest VM modifies the page table
+•This extension, however, increases the cost for address translation, 
+which is more expensive, as more memory accesses must be 
+performed by the hardware (for each translation 24 additional 
+memory accesses are required)
+•In order to reduce this overhead, the latest MMUs are usually 
+equipped with a page table cache to reduce those accessesGuest 
+Page 
+TablesExtended
+Page
+TablesGuest Physical Address
+Host Physical 
+AddressGuest  
+Virtual 
+AddressGuest PDBR Host PDBR

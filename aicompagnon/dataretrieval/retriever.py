@@ -54,6 +54,5 @@ class DataRetrieval:
             "sources": sources
         }
 
-        # import pdb; pdb.set_trace()
         return final_response
 

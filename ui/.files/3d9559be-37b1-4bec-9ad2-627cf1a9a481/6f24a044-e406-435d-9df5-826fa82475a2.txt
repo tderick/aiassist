@@ -1,0 +1,16 @@
+Source 2:
+Nested Virtualization Support
+•Multi­level nested virtualization 
+requires specific hardware support
+•Intel and AMD only supports a  single 
+virtualization level
+•Multiple virtualization levels can be 
+multiplexed into a single virtualization 
+level, i.e. the VMs running on top of 
+the guest hypervisor are run as the 
+other VMs running on top of the host 
+hypervisor
+•Guest hypervisor access to hardware 
+extensions for virtualization are 
+emulated by the Host hypervisorHardwareHost HypervisorGuest Hypervisor VMVM
+HardwareHost HypervisorGuest Hypervisor VM VM

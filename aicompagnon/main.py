@@ -24,10 +24,10 @@ async def url_data_ingestion(page_url: str = Form(...), bot_id: str = Form(...))
 @app.post("/api/v1/dataingestion/file/")
 async def file_data_ingestion(file: UploadFile = File(...), bot_id: str = Form(...)):
 
-    uniquefolder = file.filename.replace(" ", "").replace(".", "").replace("(", "").replace(")", "")    
-    os.makedirs(UPLOAD_FOLDER+uniquefolder, exist_ok=True)
+    uniquefolder = file.filename.replace(" ", "").replace(".", "").replace("(", "").replace(")", "")
+    os.makedirs(os.path.join(UPLOAD_FOLDER, uniquefolder), exist_ok=True)
 
-    file_location = os.path.join(UPLOAD_FOLDER+uniquefolder+"/", file.filename)
+    file_location = os.path.join(UPLOAD_FOLDER, uniquefolder, file.filename)
     with open(file_location, "wb") as f:
         f.write(await file.read())
     

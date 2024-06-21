@@ -1,0 +1,16 @@
+Source 2:
+Passed-through device
+•In order to implement a passed­
+through device to a guest OS 
+running into a VM, we need two 
+main functionalities:
+•Direct mapping of the I/O (physical) 
+memory space in the virtual physical 
+memory of the VM, so the guest OS 
+can write directly on the registries of 
+the peripheral
+•Direct assignmentof the interrupts
+linked with the peripheral, so the VM 
+can handle the interrupts coming 
+from the passed­through device, 
+while the VMM handles all the others

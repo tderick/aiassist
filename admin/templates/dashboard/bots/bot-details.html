@@ -204,11 +204,12 @@
         formData.append('sourceTitle', this.documentSourceForm.sourceTitle);
         formData.append('botId', this.documentSourceForm.botId);
         formData.append('sourcetype', this.documentSourceForm.sourcetype);
-        
+
         const headers = { 'Content-Type': 'multipart/form-data' };
         axios.post('/manage/bots/add-document-source/', formData, { headers }).then((res) => {
           res.data.files; // binary representation of the file
           res.status; // HTTP status
+          location.reload();
         });
       }
 

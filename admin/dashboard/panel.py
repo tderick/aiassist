@@ -84,9 +84,6 @@ def index_webpage():
             {"_id": ObjectId(bot_id)},
             {"$push": {"sources": {"title": sourceTitle, "url": sourceUrl, "sourcetype": sourcetype}}},
         )
-
-        # import pdb; pdb.set_trace()
-        # Start INGESTION
         headers = {
             'accept': 'application/json',
             'Content-Type': 'application/x-www-form-urlencoded',
@@ -132,6 +129,16 @@ def index_pdf():
     try:
         response = requests.post(config("INGESTION_URL")+"/api/v1/dataingestion/file/", files=files, data=data)
         response.raise_for_status()
-        return jsonify({'message': 'File successfully forwarded', 'response': response.json()}), 200
     except requests.RequestException as e:
         return jsonify({'error': str(e)}), 500
+    
+
+    bot = get_database().bots.find_one({"_id": ObjectId(bot_id)})
+    if bot:
+        get_database().bots.update_one(
+            {"_id": ObjectId(bot_id)},
+            {"$push": {"sources": {"title": source_title, "url": file.filename, "sourcetype": sourcetype}}},
+        )
+        return jsonify({'success': 'Document added successfully.'}), 200
+    else:
+        return jsonify({'error': 'Bot not found.'}), 404

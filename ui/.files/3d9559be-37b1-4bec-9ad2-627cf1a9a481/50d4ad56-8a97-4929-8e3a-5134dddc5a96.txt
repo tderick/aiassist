@@ -1,0 +1,11 @@
+Source 3:
+IOMMU
+•In order to translate virtual addresses into 
+physical addresses, DMA devices exploits a 
+specific MMU circuit for I/O
+•This IOMMU is responsible for translating 
+virtual addresses into physical addresses for 
+the I/O device to read/write from/to RAM
+•The IOMMU is a general device that it was 
+introduced into multiprogrammed systems 
+that adopted virtual memory

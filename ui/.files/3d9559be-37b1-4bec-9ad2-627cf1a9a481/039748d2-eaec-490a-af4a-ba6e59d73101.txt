@@ -1,0 +1,16 @@
+Source 3:
+I/O Mapping
+•For read/write to/from the registers of the passed­through device, we want 
+the VM to be allowed to perform I/O read/write without VMM 
+intervention 
+•For I/O reads and writes to other peripherals, we want the system to 
+intercept VM operations, and give back control to VMM
+•Intel VMX architecture includes in the VMCS an I/O bitmap, with one bit 
+for each possible I/O address to specifically support hardware passthrough
+•When a device passthrough is set for a VM, the I/O bitmap is modified in 
+order to set all the bits corresponding to the addresses of the I/O space of 
+the device, to grant direct access
+•In non­root mode, the CPU first checks the bitmap when a read/write is 
+performed in the I/O space: if the bit is set the instruction is completed, 
+otherwise a VM exit is triggered to give back control to the VMM (e.g. to 
+emulate hardware operations)

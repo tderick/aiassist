@@ -14,7 +14,6 @@ from llama_index.vector_stores.qdrant import QdrantVectorStore
 from llama_index.readers.web import SimpleWebPageReader
 
 from llama_index.embeddings.openai import OpenAIEmbedding
-import tempfile
 
 openai.api_key = config("OPENAI_API_KEY")
 
@@ -54,7 +53,6 @@ class FileIngestion:
         self.index = VectorStoreIndex.from_vector_store(vector_store=vector_store, node_parser=splitter)
 
     def ingest(self):
-        # import pdb; pdb.set_trace()
         reader = SimpleDirectoryReader(input_dir=self.dir)
         documents = reader.load_data()
         for doc in documents:

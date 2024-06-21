@@ -1,0 +1,14 @@
+Source 1:
+Hardware passthrough
+•I/O emulation poses the biggest performance challenge in virtual machines
+•VMM has to participate in every interaction between the VM and the I/O 
+peripherals (often emulated), thus resulting in several VM exits
+•In order to overcome this issue, a solution is to give a VM direct and exclusive 
+access to a peripheral
+•This approach is called passthroughand maps the device directly to the guest VM 
+without performing any translation
+•This eliminates completely the need for VM exits, however, the hardware is not 
+virtualized, and it must be dedicated to one VM and not shared
+•In addition to this, the VM must deal with interacting directly with the hardware 
+without additional abstraction layers
+•In order to implement this approach explicit hardware support is required
