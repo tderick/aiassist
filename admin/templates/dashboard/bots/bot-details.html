@@ -97,8 +97,16 @@
                         <label for="sourceTitle" class="form-label">Source title <span class="text-muted">Optional</span></label>
                         <input v-model="urlSourceForm.sourceTitle" type="text" class="form-control" id="sourceTitle" placeholder="Title of source displayed alongside answers">
                     </div>
-                    <button type="button" class="btn btn-secondary mr-3" @click="urlSource = false; SourceTypeSelected = false">Cancel</button>
-                    <button type="button" class="btn  btn-primary" @click="addNewUrlSource">Add source</button>
+                    <div v-if="!loading">
+                      <button type="button" class="btn btn-secondary mr-3" @click="urlSource = false; SourceTypeSelected = false">Cancel</button>
+                      <button type="button" class="btn  btn-primary" @click="addNewUrlSource">Add source</button>
+
+                    </div>
+                    <div v-if="loading" class="text-center mt-3">
+                      <div class="spinner-border text-primary" role="status">
+                      <span class="visually-hidden">Loading...</span>
+                      </div>
+                    </div>
                   </form>
                 </div>
               </div>    
@@ -130,9 +138,17 @@
                          <input type="file" class="custom-file-input" id="inputGroupFile01" @change="uploadFile" ref="file" required>
                          <label class="custom-file-label" for="inputGroupFile01">Choose file</label>
                       </div>
-                   </div>
-                    <button type="button" class="btn btn-secondary mr-3" @click="documentSource = false; SourceTypeSelected = false">Cancel</button>
-                    <button type="button" @click="submitFile" class="btn  btn-primary">Add source</button>
+                     </div>
+                    <div v-if="!loading">
+                      <button type="button" class="btn btn-secondary mr-3" @click="documentSource = false; SourceTypeSelected = false">Cancel</button>
+                      <button type="button" @click="submitFile" class="btn  btn-primary">Add source</button>
+
+                    </div>
+                    <div v-if="loading" class="text-center mt-3">
+                      <div class="spinner-border text-primary" role="status">
+                      <span class="visually-hidden">Loading...</span>
+                      </div>
+                    </div>
                 </form>
                 </div>
               </div>    
@@ -160,6 +176,7 @@
         urlSource: false,
         documentSource: false,
         SourceTypeSelected: false,
+        loading: false,
         urlSourceForm: {
           sourceUrl: '',
           sourceTitle: '',
@@ -183,6 +200,7 @@
         this.addSource = true;
       },
       addNewUrlSource() {
+        this.loading = true;
         axios.defaults.headers.post['X-CSRF-Token'] = this.$refs.csrfToken.value;
         axios.post('/manage/bots/add-source', this.urlSourceForm)
           .then(response => {
@@ -191,6 +209,7 @@
           })
           .catch(error => {
             console.log(error)
+            this.loading = false;
           })
         console.log(this.urlSourceForm)
       },
@@ -198,6 +217,7 @@
         this.documentSourceForm.file = this.$refs.file.files[0];
       },
       submitFile() {
+        this.loading = true;
         axios.defaults.headers.post['X-CSRF-Token'] = this.$refs.csrfToken.value;
         const formData = new FormData();
         formData.append('file', this.documentSourceForm.file);
@@ -210,7 +230,10 @@
           res.data.files; // binary representation of the file
           res.status; // HTTP status
           location.reload();
-        });
+        }).catch((error) => {
+          console.error(error);
+          this.loading = false;
+        })
       }
 
     }
