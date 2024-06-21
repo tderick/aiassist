@@ -116,10 +116,10 @@
                   <p class="card-text">Upload a document file containing text to learn from. Some examples are product documentation, slide decks, research papers, employee handbooks, an ebook, or any content you can convert to a text file. We will parse the content, and add it to this bot. Currently we support adding .txt, .docx, .pptx, .md, .html, .pdf, and .eml documents.</p>
                 </div>
                 <div class="col-md-6">
-                  <form>
+                  <form @submit.prevent="">
                     <div class="mb-3">
                         <label for="sourceUrl" class="form-label">Source Title <span class="text-danger">*</span></label>
-                        <input type="text" class="form-control" id="sourceUrl" placeholder="Enter the file name" required>
+                        <input v-model="documentSourceForm.sourceTitle" type="text" class="form-control" id="sourceUrl" placeholder="Enter the file name" required>
                     </div>
                     
                     <div class="input-group mb-4">
@@ -127,12 +127,12 @@
                          <!-- <span class="input-group-text">Upload</span> -->
                       </div>
                       <div class="custom-file">
-                         <input type="file" class="custom-file-input" id="inputGroupFile01" required>
+                         <input type="file" class="custom-file-input" id="inputGroupFile01" @change="uploadFile" ref="file" required>
                          <label class="custom-file-label" for="inputGroupFile01">Choose file</label>
                       </div>
                    </div>
                     <button type="button" class="btn btn-secondary mr-3" @click="documentSource = false; SourceTypeSelected = false">Cancel</button>
-                    <button type="submit" class="btn  btn-primary">Add source</button>
+                    <button type="button" @click="submitFile" class="btn  btn-primary">Add source</button>
                 </form>
                 </div>
               </div>    
@@ -165,11 +165,18 @@
           sourceTitle: '',
           botId: '',
           sourcetype: 'URL'
-        }
+        },
+        documentSourceForm: {
+          sourceTitle: '',
+          botId: '',
+          file: null,
+          sourcetype: 'Document'
+        },
       }
     },
     mounted() {
-     this.urlSourceForm.botId = this.$refs.botId.value;
+      this.urlSourceForm.botId = this.$refs.botId.value;
+      this.documentSourceForm.botId = this.$refs.botId.value;
     },
     methods: {
       openSourceBlock() {
@@ -186,7 +193,25 @@
             console.log(error)
           })
         console.log(this.urlSourceForm)
+      },
+      uploadFile() {
+        this.documentSourceForm.file = this.$refs.file.files[0];
+      },
+      submitFile() {
+        axios.defaults.headers.post['X-CSRF-Token'] = this.$refs.csrfToken.value;
+        const formData = new FormData();
+        formData.append('file', this.documentSourceForm.file);
+        formData.append('sourceTitle', this.documentSourceForm.sourceTitle);
+        formData.append('botId', this.documentSourceForm.botId);
+        formData.append('sourcetype', this.documentSourceForm.sourcetype);
+        
+        const headers = { 'Content-Type': 'multipart/form-data' };
+        axios.post('/manage/bots/add-document-source/', formData, { headers }).then((res) => {
+          res.data.files; // binary representation of the file
+          res.status; // HTTP status
+        });
       }
+
     }
   }).mount('#bot_details_add_source')
 </script>

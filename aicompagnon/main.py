@@ -1,18 +1,39 @@
 # from lxml import etree
 
+import os
+import shutil
+
 from typing import Annotated
-from fastapi import FastAPI,Form, File, HTTPException
+from fastapi import FastAPI,Form, File, UploadFile, HTTPException
 import uvicorn
 
-from dataingestion.ingestion import WebPageIngestion
+from dataingestion.ingestion import WebPageIngestion, FileIngestion
 from dataretrieval.retriever import DataRetrieval
 
 app = FastAPI()
 
+# Configuring upload folder
+UPLOAD_FOLDER = 'uploads/'
+os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 
 @app.post("/api/v1/dataingestion/url/")
 async def url_data_ingestion(page_url: str = Form(...), bot_id: str = Form(...)):
     WebPageIngestion(url=page_url, bot_id=bot_id).ingest()
+    return {"status": "success"}
+
+@app.post("/api/v1/dataingestion/file/")
+async def file_data_ingestion(file: UploadFile = File(...), bot_id: str = Form(...)):
+
+    uniquefolder = file.filename.replace(" ", "").replace(".", "").replace("(", "").replace(")", "")    
+    os.makedirs(UPLOAD_FOLDER+uniquefolder, exist_ok=True)
+
+    file_location = os.path.join(UPLOAD_FOLDER+uniquefolder+"/", file.filename)
+    with open(file_location, "wb") as f:
+        f.write(await file.read())
+    
+    FileIngestion(dir=os.path.join(UPLOAD_FOLDER,uniquefolder), bot_id=bot_id).ingest()
+
+    shutil.rmtree(UPLOAD_FOLDER+uniquefolder)
     return {"status": "success"}
 
 # @app.post("/api/v1/dataingestion/sitemap/")

@@ -1,3 +1,4 @@
+import os
 from decouple import config
 from flask import Flask
 from flask_caching import Cache
@@ -22,7 +23,6 @@ def create_app():
     app.config.from_mapping(
         SECRET_KEY=config("APP_SECRET_KEY"),
     )
-
    
     # Create and initialize the Flask-Session object AFTER `app` has been configured
     csrf.init_app(app)

@@ -1,3 +1,4 @@
+import os
 import requests
 
 from bson import ObjectId
@@ -111,3 +112,26 @@ def get_bots():
         }} ])
     return jsonify(loads(dumps(cursor))), 200
 
+
+@bp.route('/bots/add-document-source/', methods=['POST'])
+def index_pdf():
+    if 'file' not in request.files:
+        return jsonify({'error': 'No file part'}), 400
+    
+    file = request.files['file']
+    source_title = request.form.get('sourceTitle')
+    bot_id= request.form.get('botId')
+    sourcetype = request.form.get('sourcetype')
+
+    if file.filename == '':
+        return jsonify({'error': 'No selected file'}), 400
+
+    files = {'file': (file.filename, file.stream, file.mimetype)}
+    data = {'bot_id': bot_id}
+    
+    try:
+        response = requests.post(config("INGESTION_URL")+"/api/v1/dataingestion/file/", files=files, data=data)
+        response.raise_for_status()
+        return jsonify({'message': 'File successfully forwarded', 'response': response.json()}), 200
+    except requests.RequestException as e:
+        return jsonify({'error': str(e)}), 500
