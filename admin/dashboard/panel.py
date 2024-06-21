@@ -68,12 +68,13 @@ def index_webpage():
     bot_id = request.json.get("botId")
     sourceUrl = request.json.get("sourceUrl")
     sourceTitle = request.json.get("sourceTitle")
+    sourcetype = request.json.get("sourcetype")
     bot = get_database().bots.find_one({"_id": ObjectId(bot_id)})
 
     if bot:
         get_database().bots.update_one(
             {"_id": ObjectId(bot_id)},
-            {"$push": {"sources": {"title": sourceTitle, "url": sourceUrl}}},
+            {"$push": {"sources": {"title": sourceTitle, "url": sourceUrl, "sourcetype": sourcetype}}},
         )
         return {"success": "Source added successfully."}, 200
     else:
