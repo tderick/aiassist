@@ -1,4 +1,7 @@
+import requests
+
 from bson import ObjectId
+from decouple import config
 
 from flask import Blueprint, redirect, render_template, url_for, request
 from flask_login import current_user, login_required
@@ -76,7 +79,19 @@ def index_webpage():
             {"_id": ObjectId(bot_id)},
             {"$push": {"sources": {"title": sourceTitle, "url": sourceUrl, "sourcetype": sourcetype}}},
         )
-        return {"success": "Source added successfully."}, 200
+
+        # import pdb; pdb.set_trace()
+        # Start INGESTION
+        headers = {
+            'accept': 'application/json',
+            'Content-Type': 'application/x-www-form-urlencoded',
+        }
+        rs = requests.post(config("INGESTION_URL")+"/api/v1/dataingestion/url/", headers=headers, data={"bot_id": str(bot_id), "page_url": sourceUrl})
+
+        if rs.status_code == 200:
+            return {"success": "Source added successfully."}, 200
+        else:
+            return {"error": "Error in adding source."}, 400
     else:
         return {"error": "Bot not found."}, 404
   

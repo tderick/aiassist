@@ -5,6 +5,7 @@
     <div class="card card-block card-stretch card-height">
       <div class="card-body">
           <h4 class="mb-2">{{bot.name}}</h4>
+          <p class="text-muted text-small">ID: {{bot._id}}</p>
           <p class="mb-0">{{bot.description}}</p>
           <input type="hidden" ref="botId"  value="{{ bot._id }}"/>
           <input ref="csrfToken" value="{{ csrf_token() }}" type="hidden">
@@ -178,6 +179,7 @@
         axios.post('/manage/bots/add-source', this.urlSourceForm)
           .then(response => {
             console.log(response.data)
+            location.reload();
           })
           .catch(error => {
             console.log(error)
